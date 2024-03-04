@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class DoubleScorePowerup : MonoBehaviour
 {
-    public float duration = 10f;
+    public int duration = 10;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
             StartCoroutine(DoubleScoreCoroutine());
-            gameObject.SetActive(false);
         }
     }
 

@@ -16,7 +16,6 @@ public class Score : MonoBehaviour
     public IDbCommand dbcmd;
     private int _score;
     public int _baseScore = 1;
-    public bool doubleScoreActive = false;
     public GameObject doubleScoreObject;
 
     private void Awake()
@@ -47,13 +46,22 @@ public class Score : MonoBehaviour
 
         while (reader.Read())
         {
-            _highScoreText.text = reader[0].ToString();
+            if (int.Parse(reader[0].ToString()) < _score)
+            {
+                _highScoreText.text = _score.ToString();
+            }
+            else
+            {
+                _highScoreText.text = reader[0].ToString();
+            }
+
+
         }
     }
 
     public void UpdateScore()
     {
-        _score++;
+        _score = _score + _baseScore;
         _currentScoreText.text = _score.ToString();
         UpdateHighScore();
     }
@@ -62,13 +70,6 @@ public class Score : MonoBehaviour
     {
         IDbCommand cmnd = dbcon.CreateCommand();
         cmnd.CommandText = "INSERT INTO scoreTable (score) VALUES (" + _score + ")";
-        cmnd.ExecuteNonQuery();
-    }
-
-    public void ResetScore()
-    {
-        IDbCommand cmnd = dbcon.CreateCommand();
-        cmnd.CommandText = "DROP TABLE scoreTable";
         cmnd.ExecuteNonQuery();
     }
 
@@ -92,19 +93,17 @@ public class Score : MonoBehaviour
 
     public void ActivateDoubleScore()
     {
-        doubleScoreActive = true;
-        AddScore(_baseScore);
+        _baseScore = 2;
+        doubleScoreObject.GetComponent<SpriteRenderer>().enabled = true;
+        doubleScoreObject.SetActive(true);
     }
 
     public void DeactivateDoubleScore()
     {
-        doubleScoreActive = false;
+        _baseScore = 1;
         PipeSpawner.instance._doubleSpawned = false;
-        Debug.Log("ended na");
+        doubleScoreObject.GetComponent<SpriteRenderer>().enabled = false;
+        doubleScoreObject.SetActive(false);
     }
 
-    public void AddScore(int points)
-    {
-        _score++;
-    }
 }

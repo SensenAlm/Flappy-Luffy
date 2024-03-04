@@ -9,7 +9,6 @@ public class PipeIncreaseScore : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             Score.instance.UpdateScore();
-            Score.instance.AddScore(Score.instance._baseScore);
         }
     }
 }

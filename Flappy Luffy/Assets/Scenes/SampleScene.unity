@@ -158,7 +158,6 @@ MonoBehaviour:
   _currentScoreText: {fileID: 1230710416}
   _highScoreText: {fileID: 527207905}
   _baseScore: 1
-  doubleScoreActive: 0
   doubleScoreObject: {fileID: 0}
 --- !u!114 &37000426
 MonoBehaviour:
@@ -2018,7 +2017,7 @@ MonoBehaviour:
   _doublePrefab: {fileID: 9120408587426961462, guid: f4905d357685dde4d876a9ef13b4abec, type: 3}
   _shrinkSpawnChance: 0.01
   _shieldSpawnChance: 0.01
-  _doubleSpawnChance: 1
+  _doubleSpawnChance: 0.5
   _shieldSpawned: 0
   _doubleSpawned: 0
 --- !u!4 &1881271348

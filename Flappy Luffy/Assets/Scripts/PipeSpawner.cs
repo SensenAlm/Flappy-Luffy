@@ -47,7 +47,7 @@ public class PipeSpawner : MonoBehaviour
         Vector3 spawnPos = transform.position + new Vector3(0, Random.Range(-_heightRange, _heightRange));
 
         GameObject pipe = Instantiate(_pipePrefab, spawnPos, Quaternion.identity);
-        Destroy(pipe, 10f);
+        Destroy(pipe, 5f);
 
         if (Random.value < _shrinkSpawnChance && !_shrinkSpawned)
         {

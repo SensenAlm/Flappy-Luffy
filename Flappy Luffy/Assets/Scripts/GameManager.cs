@@ -14,14 +14,14 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
-        Time.timeScale = 1f;
+        Time.timeScale = 1f; // resume
     }
 
     public void GameOver()
     {
         _gameOverCanvas.SetActive(true);
 
-        Time.timeScale = 0f;
+        Time.timeScale = 0f; // pause
     }
 
     public void RestartGame()

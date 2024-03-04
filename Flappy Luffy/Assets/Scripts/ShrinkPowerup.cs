@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ShrinkPowerup : MonoBehaviour
 {
-    [SerializeField] private float shrinkFactor = .5f;
+    [SerializeField] private float shrinkFactor = 1.5f;
 
     void OnTriggerEnter2D(Collider2D other)
     {
