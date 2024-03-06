@@ -12,7 +12,6 @@ public class FlyBehavior : MonoBehaviour
     private Rigidbody2D _rb;
     public GameObject shieldObject;
 
-
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -23,7 +22,6 @@ public class FlyBehavior : MonoBehaviour
 
     private void Update()
     {
-        var input = Input.inputString;
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             _rb.velocity = Vector2.up * _velocity;

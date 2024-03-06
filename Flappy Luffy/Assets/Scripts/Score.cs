@@ -54,8 +54,6 @@ public class Score : MonoBehaviour
             {
                 _highScoreText.text = reader[0].ToString();
             }
-
-
         }
     }
 
@@ -89,6 +87,12 @@ public class Score : MonoBehaviour
 
         dbcmd.CommandText = q_createTable;
         dbcmd.ExecuteReader();
+
+        dbcmd = dbcon.CreateCommand();
+        string q_createPowerup = "CREATE TABLE IF NOT EXISTS powerupTable (powerup CHAR(20), qty INTEGER)";
+
+        dbcmd.CommandText = q_createPowerup;
+        dbcmd.ExecuteReader();
     }
 
     public void ActivateDoubleScore()
@@ -96,6 +100,25 @@ public class Score : MonoBehaviour
         _baseScore = 2;
         doubleScoreObject.GetComponent<SpriteRenderer>().enabled = true;
         doubleScoreObject.SetActive(true);
+
+        IDbCommand cmnd_read = dbcon.CreateCommand();
+        IDataReader reader;
+        string query = "SELECT count(*) FROM powerupTable";
+        cmnd_read.CommandText = query;
+        reader = cmnd_read.ExecuteReader();
+
+        if (reader.Read())
+        {
+            IDbCommand cmnd = dbcon.CreateCommand();
+            cmnd.CommandText = "UPDATE powerupTable SET qty=1 WHERE powerup='DoubleScore'";
+            cmnd.ExecuteNonQuery();
+        }
+        else
+        {
+            IDbCommand cmnd = dbcon.CreateCommand();
+            cmnd.CommandText = "INSERT INTO powerupTable (powerup, qty) VALUES (DoubleScore, 1)";
+            cmnd.ExecuteNonQuery();
+        }
     }
 
     public void DeactivateDoubleScore()
@@ -104,6 +127,25 @@ public class Score : MonoBehaviour
         PipeSpawner.instance._doubleSpawned = false;
         doubleScoreObject.GetComponent<SpriteRenderer>().enabled = false;
         doubleScoreObject.SetActive(false);
+
+        IDbCommand cmnd_read = dbcon.CreateCommand();
+        IDataReader reader;
+        string query = "SELECT count(*) FROM powerupTable";
+        cmnd_read.CommandText = query;
+        reader = cmnd_read.ExecuteReader();
+
+        if (reader.Read())
+        {
+            IDbCommand cmnd = dbcon.CreateCommand();
+            cmnd.CommandText = "UPDATE powerupTable SET qty=0 WHERE powerup='DoubleScore'";
+            cmnd.ExecuteNonQuery();
+        }
+        else
+        {
+            IDbCommand cmnd = dbcon.CreateCommand();
+            cmnd.CommandText = "INSERT INTO powerupTable (powerup, qty) VALUES (DoubleScore, 0)";
+            cmnd.ExecuteNonQuery();
+        }
     }
 
 }
