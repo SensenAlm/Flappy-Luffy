@@ -34,7 +34,7 @@ public class PipeSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (_timer > _maxTime)
+        if (_timer > _maxTime) // spawn time for pipes
         {
             SpawnPipe();
             _timer = 0;
@@ -44,11 +44,13 @@ public class PipeSpawner : MonoBehaviour
 
     private void SpawnPipe()
     {
+        // spawning pipes
         Vector3 spawnPos = transform.position + new Vector3(0, Random.Range(-_heightRange, _heightRange));
 
         GameObject pipe = Instantiate(_pipePrefab, spawnPos, Quaternion.identity);
         Destroy(pipe, 5f);
 
+        // spawning powerups
         if (Random.value < _shrinkSpawnChance && !_shrinkSpawned)
         {
             Vector3 shrinkSpawnPos = spawnPos + new Vector3(0, 0);

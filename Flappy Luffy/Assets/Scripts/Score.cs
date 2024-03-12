@@ -12,8 +12,7 @@ public class Score : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI _currentScoreText;
     [SerializeField] private TextMeshProUGUI _highScoreText;
-    public IDbConnection dbcon;
-    public IDbCommand dbcmd;
+
     private int _score;
     public int _baseScore = 1;
     public GameObject doubleScoreObject;
@@ -24,6 +23,7 @@ public class Score : MonoBehaviour
         {
             instance = this;
         }
+        DatabaseManager.InitializeDatabase(); // initialization of database
     }
 
     private void Start()
@@ -32,12 +32,13 @@ public class Score : MonoBehaviour
         doubleScoreObject = GameObject.FindWithTag("DoubleScore");
         doubleScoreObject.GetComponent<SpriteRenderer>().enabled = false;
         doubleScoreObject.SetActive(false);
-        SqliteSetup();
         UpdateHighScore();
     }
 
     private void UpdateHighScore()
     {
+        IDbConnection dbcon = DatabaseManager.GetConnection();
+
         IDbCommand cmnd_read = dbcon.CreateCommand();
         IDataReader reader;
         string query = "SELECT max(score) FROM scoreTable";
@@ -66,33 +67,10 @@ public class Score : MonoBehaviour
 
     public void FinalScore()
     {
+        IDbConnection dbcon = DatabaseManager.GetConnection();
         IDbCommand cmnd = dbcon.CreateCommand();
         cmnd.CommandText = "INSERT INTO scoreTable (score) VALUES (" + _score + ")";
         cmnd.ExecuteNonQuery();
-    }
-
-    void SqliteSetup()
-    {
-
-        // Create database
-        string connection = "URI=file:" + Application.persistentDataPath + "/" + "scoreDB";
-
-        // Open connection
-        dbcon = new SqliteConnection(connection);
-        dbcon.Open();
-
-        // Create table
-        dbcmd = dbcon.CreateCommand();
-        string q_createTable = "CREATE TABLE IF NOT EXISTS scoreTable (id INTEGER PRIMARY KEY, score INTEGER )";
-
-        dbcmd.CommandText = q_createTable;
-        dbcmd.ExecuteReader();
-
-        dbcmd = dbcon.CreateCommand();
-        string q_createPowerup = "CREATE TABLE IF NOT EXISTS powerupTable (powerup CHAR(20), qty INTEGER)";
-
-        dbcmd.CommandText = q_createPowerup;
-        dbcmd.ExecuteReader();
     }
 
     public void ActivateDoubleScore()
@@ -101,25 +79,44 @@ public class Score : MonoBehaviour
         doubleScoreObject.GetComponent<SpriteRenderer>().enabled = true;
         doubleScoreObject.SetActive(true);
 
+        // database
+        IDbConnection dbcon = DatabaseManager.GetConnection();
         IDbCommand cmnd_read = dbcon.CreateCommand();
         IDataReader reader;
-        string query = "SELECT count(*) FROM powerupTable";
+        string query = "SELECT count(*) FROM powerupTable WHERE powerup='DoubleScore'";
         cmnd_read.CommandText = query;
         reader = cmnd_read.ExecuteReader();
 
         if (reader.Read())
         {
-            IDbCommand cmnd = dbcon.CreateCommand();
-            cmnd.CommandText = "UPDATE powerupTable SET qty=1 WHERE powerup='DoubleScore'";
-            cmnd.ExecuteNonQuery();
-        }
-        else
-        {
-            IDbCommand cmnd = dbcon.CreateCommand();
-            cmnd.CommandText = "INSERT INTO powerupTable (powerup, qty) VALUES (DoubleScore, 1)";
-            cmnd.ExecuteNonQuery();
+            int count = reader.GetInt32(0);
+            if (count > 0)
+            {
+                IDbCommand cmnd = dbcon.CreateCommand();
+                cmnd.CommandText = "UPDATE powerupTable SET qty=1 WHERE powerup='DoubleScore'";
+                cmnd.ExecuteNonQuery();
+            }
+            else
+            {
+                IDbCommand cmnd = dbcon.CreateCommand();
+                cmnd.CommandText = "INSERT INTO powerupTable (powerup, qty) VALUES ('DoubleScore', 1)";
+                cmnd.ExecuteNonQuery();
+            }
+
+            // update powerup
+            IDbCommand cmnd_read1 = dbcon.CreateCommand();
+            string query1 = "SELECT qty FROM powerupTable WHERE powerup='DoubleScore'";
+            cmnd_read1.CommandText = query1;
+            IDataReader reader1 = cmnd_read1.ExecuteReader();
+
+            while (reader1.Read())
+            {
+                Debug.Log("DoubleScore Value: " + reader1.GetInt32(0));
+            }
         }
     }
+
+
 
     public void DeactivateDoubleScore()
     {
@@ -128,24 +125,42 @@ public class Score : MonoBehaviour
         doubleScoreObject.GetComponent<SpriteRenderer>().enabled = false;
         doubleScoreObject.SetActive(false);
 
+        // database
+        IDbConnection dbcon = DatabaseManager.GetConnection();
         IDbCommand cmnd_read = dbcon.CreateCommand();
         IDataReader reader;
-        string query = "SELECT count(*) FROM powerupTable";
+        string query = "SELECT count(*) FROM powerupTable WHERE powerup='DoubleScore'";
         cmnd_read.CommandText = query;
         reader = cmnd_read.ExecuteReader();
 
         if (reader.Read())
         {
-            IDbCommand cmnd = dbcon.CreateCommand();
-            cmnd.CommandText = "UPDATE powerupTable SET qty=0 WHERE powerup='DoubleScore'";
-            cmnd.ExecuteNonQuery();
-        }
-        else
-        {
-            IDbCommand cmnd = dbcon.CreateCommand();
-            cmnd.CommandText = "INSERT INTO powerupTable (powerup, qty) VALUES (DoubleScore, 0)";
-            cmnd.ExecuteNonQuery();
+            int count = reader.GetInt32(0);
+            if (count > 0)
+            {
+                IDbCommand cmnd = dbcon.CreateCommand();
+                cmnd.CommandText = "UPDATE powerupTable SET qty=0 WHERE powerup='DoubleScore'";
+                cmnd.ExecuteNonQuery();
+            }
+            else
+            {
+                IDbCommand cmnd = dbcon.CreateCommand();
+                cmnd.CommandText = "INSERT INTO powerupTable (powerup, qty) VALUES ('DoubleScore', 0)";
+                cmnd.ExecuteNonQuery();
+            }
+
+            // update powerup value
+            IDbCommand cmnd_read1 = dbcon.CreateCommand();
+            string query1 = "SELECT qty FROM powerupTable WHERE powerup='DoubleScore'";
+            cmnd_read1.CommandText = query1;
+            IDataReader reader1 = cmnd_read1.ExecuteReader();
+
+            while (reader1.Read())
+            {
+                Debug.Log("DoubleScore Value: " + reader1.GetInt32(0));
+            }
         }
     }
+
 
 }
