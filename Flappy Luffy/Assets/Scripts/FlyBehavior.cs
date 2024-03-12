@@ -17,6 +17,7 @@ public class FlyBehavior : MonoBehaviour
 
     private void Start()
     {
+        Time.timeScale = 0f; // pause
         // initalization of rigid body and shield object
         _rb = GetComponent<Rigidbody2D>();
         shieldObject = GameObject.FindWithTag("Shield");
