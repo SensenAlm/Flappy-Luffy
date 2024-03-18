@@ -23,6 +23,7 @@ public class FlyBehavior : MonoBehaviour
         shieldObject = GameObject.FindWithTag("Shield");
         shieldObject.GetComponent<SpriteRenderer>().enabled = false;
         shieldObject.SetActive(false);
+        Application.targetFrameRate = 60;
     }
 
     private void Update()

@@ -5,6 +5,7 @@ using TMPro;
 using Mono.Data.Sqlite;
 using System.Data;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class Score : MonoBehaviour
 {
@@ -33,6 +34,7 @@ public class Score : MonoBehaviour
         doubleScoreObject.GetComponent<SpriteRenderer>().enabled = false;
         doubleScoreObject.SetActive(false);
         UpdateHighScore();
+        //ResetScore();
     }
 
     private void UpdateHighScore()
@@ -57,7 +59,13 @@ public class Score : MonoBehaviour
             }
         }
     }
-
+    public void ResetScore()
+    {
+        IDbConnection dbcon = DatabaseManager.GetConnection();
+        IDbCommand cmnd = dbcon.CreateCommand();
+        cmnd.CommandText = "DELETE FROM scoreTable";
+        cmnd.ExecuteNonQuery();
+    }
     public void UpdateScore()
     {
         _score = _score + _baseScore;

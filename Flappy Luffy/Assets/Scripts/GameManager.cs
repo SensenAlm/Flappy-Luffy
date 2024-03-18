@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     [SerializeField] private GameObject _gameOverCanvas;
     [SerializeField] private GameObject _startMenuCanvas;
-    [SerializeField] private GameObject _scoreCanvas;
 
     private void Awake()
     {
@@ -23,13 +22,10 @@ public class GameManager : MonoBehaviour
     public void MainMenu()
     {
         Time.timeScale = 0f; // pause
-        _scoreCanvas.SetActive(false);
-
     }
     public void Play()
     {
         Time.timeScale = 1f; // resume
-        _scoreCanvas.SetActive(true);
         _startMenuCanvas.SetActive(false);
     }
     public void GameOver()
