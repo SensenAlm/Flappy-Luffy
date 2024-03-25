@@ -7,7 +7,7 @@ using System.IO;
 
 public class ShrinkPowerup : MonoBehaviour
 {
-    [SerializeField] private float shrinkFactor = 1.5f;
+    [SerializeField] private float shrinkFactor = 0.95f;
 
     void OnTriggerEnter2D(Collider2D other)
     {

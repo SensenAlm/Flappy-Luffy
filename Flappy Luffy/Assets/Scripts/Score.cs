@@ -71,6 +71,10 @@ public class Score : MonoBehaviour
         _score = _score + _baseScore;
         _currentScoreText.text = _score.ToString();
         UpdateHighScore();
+        if (_score == 1)
+        {
+            UpdateHighScore();
+        }
     }
 
     public void FinalScore()

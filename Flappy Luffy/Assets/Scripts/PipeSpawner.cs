@@ -10,9 +10,9 @@ public class PipeSpawner : MonoBehaviour
     [SerializeField] private GameObject _shrinkPrefab;
     [SerializeField] private GameObject _shieldPrefab;
     [SerializeField] private GameObject _doublePrefab;
-    [SerializeField] private float _shrinkSpawnChance = .01f;
-    [SerializeField] private float _shieldSpawnChance = .01f;
-    [SerializeField] private float _doubleSpawnChance = .01f;
+    [SerializeField] private float _shrinkSpawnChance;
+    [SerializeField] private float _shieldSpawnChance;
+    [SerializeField] private float _doubleSpawnChance;
     private float _timer;
     private bool _shrinkSpawned = false;
     public bool _shieldSpawned = false;
